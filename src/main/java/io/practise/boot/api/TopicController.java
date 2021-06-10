@@ -1,20 +1,20 @@
 package io.practise.boot.api;
 
+import io.practise.boot.common.ApplicationResponse;
 import io.practise.boot.model.Topic;
 import io.practise.boot.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.DataFormatException;
 
-import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
-public class TopicController {
+public final class TopicController {
 
   @Autowired
   private TopicService topicService;
@@ -33,7 +33,29 @@ public class TopicController {
     if (topic.isPresent()) {
       return topic.get();
     } else {
-      throw new ResponseStatusException(EXPECTATION_FAILED, "Resource " + id + " not found");
+      throw new ResponseStatusException(BAD_REQUEST, "Resource " + id + " not found");
     }
+  }
+
+  @PostMapping("/allTopics")
+  public ApplicationResponse createTopic(Topic topic) {
+    try {
+      topicService.createTopic(topic);
+    } catch (DataFormatException cause) {
+      throw new ResponseStatusException(BAD_REQUEST, cause.getMessage());
+    }
+    return new ApplicationResponse("Data saved successfully !");
+  }
+
+  @PutMapping("/allTopics")
+  public ApplicationResponse updateTopic(Topic topic) {
+    boolean result = topicService.updateTopic(topic);
+
+    if (result) {
+      return new ApplicationResponse("Data saved successfully !");
+    } else {
+      throw new ResponseStatusException(BAD_REQUEST);
+    }
+
   }
 }
