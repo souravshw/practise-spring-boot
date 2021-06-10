@@ -6,7 +6,7 @@ import java.util.Objects;
  * @author Sourav
  */
 public class Topic {
-  private int id;
+  private Integer id;
   private String topicName;
   private String description;
   private String credits;
@@ -22,11 +22,11 @@ public class Topic {
     this.credits = credits;
   }
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
